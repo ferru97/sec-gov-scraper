@@ -29,12 +29,12 @@ def getData(link, driver):
     html = driver.page_source.lower()
     driver.switch_to.default_content()
     soup = BeautifulSoup(html, "html.parser")
-    firstSectionId = soup.find("a", text="business")["href"]
-    secondSectionId = soup.find("a", text="risk factors")["href"]
+    firstSectionId = soup.find("a", text="risk factors")["href"]
+    secondSectionId = soup.find("a", text="unresolved staff comments")["href"]
     start = html.find(f'id="{firstSectionId.replace("#", "")}"')
     stop = html.find(f'id="{secondSectionId.replace("#", "")}"')
     htmlData = html[start:stop-5]
-    toRemove = htmlData.find("business")
+    toRemove = htmlData.find("risk factors")
     finalHtml = htmlData[toRemove:]
     soup = BeautifulSoup(finalHtml, "html.parser")
     return soup.text
