@@ -25,14 +25,20 @@ def getSeleniumInstanceFirefox():
 def getData(link, driver):
     driver.get(link)
     time.sleep(3)
-    driver.switch_to.frame(driver.find_element(By.TAG_NAME, "iframe"))
-    html = driver.page_source.lower()
-    driver.switch_to.default_content()
+    try:
+        driver.switch_to.frame(driver.find_element(By.TAG_NAME, "iframe"))
+        html = driver.page_source.lower()
+        driver.switch_to.default_content()
+    except:
+        html = driver.page_source.lower()
     soup = BeautifulSoup(html, "html.parser")
     firstSectionId = soup.find("a", text="risk factors")["href"]
     secondSectionId = soup.find("a", text="unresolved staff comments")["href"]
     start = html.find(f'id="{firstSectionId.replace("#", "")}"')
     stop = html.find(f'id="{secondSectionId.replace("#", "")}"')
+    if start == -1 and stop == -1:
+        start = html.find(f'name="{firstSectionId.replace("#", "")}"')
+        stop = html.find(f'name="{secondSectionId.replace("#", "")}"')
     htmlData = html[start:stop-5]
     toRemove = htmlData.find("risk factors")
     finalHtml = htmlData[toRemove:]
